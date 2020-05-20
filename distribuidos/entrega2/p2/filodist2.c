@@ -475,64 +475,66 @@ void * comunicaciones(void)
 
   		if (ret != 1)
   		{
-    		fprintf(stderr, "Filosofo %d: Error de lectura "
-    				"en el socket de conexion con el anterior nodo Ret=%d\n",
-    				idfilo, ret);
-    	}
-    	
-    	pthread_mutex_lock(&mestado);
-    	if (estado == queriendo_comer)
-    	{   
-    		// si estado=queriendo_comer 
-    		// alterar token cuando esten libres y avanzar
-    		// cambiar estado a comiendo y señalar la condición
-       		if (palillosLibres(token)) {
-         		alterarToken(&token, comiendo);
-         		estado = comiendo;
-         		pthread_cond_signal(&condestado);
-       		}
-    	}
-    	
-    	// si estado=dejando_comer
-    	else if (estado == dejando_comer)
-    	{    
-    		// alterar token y avanzar
-    		// cambiar estado a pensando y señalar la condicion
-       		alterarToken(&token, dejando_comer);
-       		estado = queriendo_beber; //pensando; 
-       		pthread_cond_signal(&condestado);
-    	}
+  			fprintf(stderr, "Filosofo %d: Error de lectura "
+  				"en el socket de conexion con el anterior nodo Ret=%d\n", 
+  				idfilo, ret);
+  		}
 
-    	//quiere beber
-    	else if (estado == queriendo_beber)
-    	{
-    		if(jarraLibre(token)) {
-    			alterarToken(&token, bebiendo);
-    			estado = bebiendo;
-    			pthread_cond_signal(&condestado);
-    		}
+  		pthread_mutex_lock(&mestado);
 
-    	}
+  		if (estado == queriendo_comer)
+  		{   
 
-    	//clarisimo
-    	else if (estado == dejando_beber)
-    	{
-    		alterarToken(&token, pensando);
-    		estado = pensando;
-    		pthread_cond_signal(&condestado);
-    	}
-    	
-    	pthread_mutex_unlock(&mestado);
-    	if (ret==1) // si se leyó bien
-    	{
-    		//pasamos el token al siguiente filos
-      		ret = write(socknext, &token, sizeof(unsigned char));
-      		
-      		if (ret!=1)
-      		{
-        		fprintf(stderr,"Error de escritura "
-        			"en el socket de conexion con el siguiente nodo\n");
-      		}
+  			// si estado=queriendo_comer 
+  			// alterar token cuando esten libres y avanzar
+  			// cambiar estado a comiendo y señalar la condición
+  			if (palillosLibres(token)) {
+  				alterarToken(&token, comiendo);
+  				estado = comiendo;
+  				pthread_cond_signal(&condestado);
+  			}
+  		}
+
+  		// si estado=dejando_comer
+  		else if (estado == dejando_comer)
+  		{    
+  			// alterar token y avanzar
+  			// cambiar estado a pensando y señalar la condicion
+  			alterarToken(&token, dejando_comer);
+  			estado = queriendo_beber; //pensando; 
+  			pthread_cond_signal(&condestado);
+  		}
+
+  		//quiere beber
+  		else if (estado == queriendo_beber)
+  		{
+  			if(jarraLibre(token)) {
+  				alterarToken(&token, bebiendo);
+  				estado = bebiendo;
+  				pthread_cond_signal(&condestado);
+  			}
+  		}
+
+  		//clarisimo
+  		else if (estado == dejando_beber)
+  		{
+  			alterarToken(&token, pensando);
+  			estado = pensando;
+  			pthread_cond_signal(&condestado);
+  		}
+
+  		thread_mutex_unlock(&mestado);
+
+  		if (ret==1) // si se leyó bien
+  		{
+  			//pasamos el token al siguiente filos
+  			ret = write(socknext, &token, sizeof(unsigned char));
+
+  			if (ret != 1)
+  			{
+  				fprintf(stderr,"Error de escritura "
+  					"en el socket de conexion con el siguiente nodo\n");
+  			}
     	}
   	}  
 }
