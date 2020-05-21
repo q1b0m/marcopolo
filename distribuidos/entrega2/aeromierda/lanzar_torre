@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#if [ "$#" -ne 2 ]; then
+#    echo "Debe especificarse el máximo número de aviones y el número de pistas"
+#    exit
+#fi
+#echo "Lanzando Torre de control"
+
+#java -cp clases:clases/rabbitmq-client.jar -Djava.security.policy=policy torre.Torre $1 $2
+java -cp clases:clases/rabbitmq-client.jar -Djava.security.policy=policy torre.Torre 1 2

@@ -1,0 +1,8 @@
+echo "Compilando interfaz RMI del avion"
+javac -d ../clases AvionInterface.java
+
+echo "Compilando implementación RMI del avión"
+javac -d ../clases -cp ../clases AvionImpl.java
+
+echo "Compilando Simulador de vuelo"
+javac -d ../clases -cp ../clases:../clases/rabbitmq-client.jar Simulador.java

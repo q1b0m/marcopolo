@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Compilando Torre de control"
+javac -d ../clases -cp ../clases:../clases/rabbitmq-client.jar Torre.java EstadoPistas.java

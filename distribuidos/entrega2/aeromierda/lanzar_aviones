@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+    echo "Debe especificarse el número de aviones y el número de vuelos por avión"
+    exit
+fi
+
+for i in $(seq 1 $1); do
+ ./lanzar_avion $i $2 &
+done
